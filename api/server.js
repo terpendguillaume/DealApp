@@ -214,12 +214,34 @@ apiRoutes.get('/users/:username', function(req, res) {
 
 apiRoutes.get('/users/:username/vouchers', function(req, res) {
     var username = req.params.username;
-    var queryParams = username
-
-    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
-    db.all(query, queryParams, function(err, data){
+    var seller = req.decoded.seller;
+    if(seller == "true"){
+        var queryParams = username;
+        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE owner = ?";
+    }
+    else{
+        var queryParams = username;
+        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
+    }
+        db.all(query, queryParams, function(err, data){
         if(err){
             res.json({ success: false, message: 'This user doesn\'t exist.' });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
+        }
+    })
+});
+
+apiRoutes.delete('/users/:username/vouchers/:id', function(req, res) {
+    var username = req.params.username;
+    var id = req.params.id;
+    var queryParams = [username, id];
+
+    var query = "DELETE FROM Associations WHERE user = ? AND voucher = ?";
+    db.all(query, queryParams, function(err, data){
+        if(err){
+            res.json({ success: false, message: 'This voucher doesn\'t exist.' });
         }
         else{
             res.json({ success: true, vouchers: data });

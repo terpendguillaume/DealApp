@@ -10,7 +10,6 @@ angular.module('starter.controllers', ['ui.router'])
 //Compte
 .controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http, $window) {
     // log in
-    console.log("token : " + token());
     if(getToken()){
         $scope.token = true;
         $scope.user = getToken();
@@ -41,7 +40,6 @@ angular.module('starter.controllers', ['ui.router'])
 
         $http.post("http://localhost:8080/api/login?username=" + username + "&password=" + password)
         .then(function(response) {
-            console.log(response.data);
             if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
@@ -59,7 +57,6 @@ angular.module('starter.controllers', ['ui.router'])
 
         $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
         .then(function(response) {
-            console.log(response.data);
             if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
@@ -121,9 +118,22 @@ angular.module('starter.controllers', ['ui.router'])
 })
 
 // Mes offres
-.controller('MesOffresCtrl', function($scope, $ionicModal, $ionicPopup, MyOffers) {
+.controller('MesOffresCtrl', function($scope, $ionicModal, $ionicPopup, $http) {
 
     // Ajouter une offre
+    if(getToken()){
+        console.log(getToken());
+        if(getToken().seller == "true"){
+            $scope.seller = true;
+        }
+        else{
+            $scope.seller = false;
+        }
+    }
+    else{
+        $scope.seller = false;
+    }
+
     $ionicModal.fromTemplateUrl('templates/ajouteroffre.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -131,7 +141,11 @@ angular.module('starter.controllers', ['ui.router'])
         $scope.addOffreModal = modal;
     });
 
-    $scope.myoffers = MyOffers.all();
+    $http.get("http://localhost:8080/api/users/" + getToken().username + "/vouchers?token=" + token())
+    .then(function(response) {
+        console.log(response.data.vouchers);
+        $scope.myoffers = response.data.vouchers;
+    });
 
     //  popup de confirmations
     $scope.showConfirm = function() {
