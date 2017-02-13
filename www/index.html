@@ -22,6 +22,7 @@
 </head>
 <body ng-app="starter" ng-controller="MenuCtrl as menu">
   <ion-side-menus>
+    <button menu-toggle = "left" class = "button button-icon icon ion-navicon"></button>
     <ion-side-menu side="left">
       <ion-item menu-close class="item-icon-left" href="#/tab/populaires">
         <i class="icon ion-home"></i>
@@ -42,6 +43,7 @@
       <!-- Left menu -->
     </ion-side-menu>
     <ion-side-menu-content>
+
       <!-- Main content, usually <ion-nav-view> -->
       <ion-nav-bar class="bar-stable">
         <ion-nav-back-button>

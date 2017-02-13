@@ -1,26 +1,29 @@
 <ion-view view-title="Mon Compte">
+  <ion-nav-buttons side="left">
+    <button menu-toggle = "left" class = "button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
   <ion-content>
-  <button class="button button-block button-positive" ng-show="!token" ng-click="loginModal.show()">Se connecter</button>
-  <button class="button button-block button-positive" ng-show="!token" ng-click="signupModal.show()">S'inscrire</button>
-  <button class="button button-block button-positive" ng-show="token" ng-click="showLogout()">Se déconnecter</button>
-  <div class="info" ng-show="token">
-    <p>Adresse email : <b>{{user.email}}</b></p>
-    <p>Nom d'utilisateur : {{user.username}}</p>
-    <div ng-show="{{user.seller}}">
-    <p>Type de compte : Vendeur<p>
-    </div>
-    <div ng-show="!{{user.seller}}">
-    <p>Type de compte : Client<p>
-    </div>
-    <button class="button button-small button-positive" ng-click="showSupprimer()">Supprimer le compte</button>
-  </div>
-  <div class="card">
-    <p>
-      Plateforme : {{info.platform}}
-    </p>
-    <p>
-      Version : {{info.version}}
-    </p>
-  </div>
-  </ion-content>
-</ion-view>
+    <button class="button button-block button-positive" ng-show="!token" ng-click="loginModal.show()">Se connecter</button>
+    <button class="button button-block button-positive" ng-show="!token" ng-click="signupModal.show()">S'inscrire</button>
+    <button class="button button-block button-positive" ng-show="token" ng-click="showLogout()">Se déconnecter</button>
+    <div class="info" ng-show="token">
+      <p>Adresse email : <b>{{user.email}}</b></p>
+      <p>Nom d'utilisateur : {{user.username}}</p>
+      <div ng-show="{{user.seller}}">
+        <p>Type de compte : Vendeur<p>
+        </div>
+        <div ng-show="!{{user.seller}}">
+          <p>Type de compte : Client<p>
+          </div>
+          <button class="button button-small button-positive" ng-click="showSupprimer()">Supprimer le compte</button>
+        </div>
+        <div class="card">
+          <p>
+            Plateforme : {{info.platform}}
+          </p>
+          <p>
+            Version : {{info.version}}
+          </p>
+        </div>
+      </ion-content>
+    </ion-view>
