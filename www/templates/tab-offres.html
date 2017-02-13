@@ -1,0 +1,12 @@
+<ion-view view-title="Toutes les offres">
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item ng-repeat="offer in offers" type="item-text-wrap" href="#/tab/offres/{{offer.id}}">
+        <i class="icon {{offer.icon}}"></i>
+        {{offer.title}}
+        <p>{{offer.shop}}</p>
+        <p><b>{{offer.reduction}}</b></p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+ </ion-view>

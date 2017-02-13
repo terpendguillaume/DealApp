@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-content>
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Nom de l'offre</span>
+          <input type="text" ng-model="addOffreModalData.nameOffer">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Votre Boutique</span>
+          <input type="text" ng-model="addOffreModal.boutique">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Montant réduction</span>
+          <input type="text" ng-model="addOffreModal.reduction">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Montant réduction</span>
+          <input type="text" ng-model="addOffreModal.reduction">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Description</span>
+          <input type="text" ng-model="addOffreModal.description">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" ng-click="addOffreModal.hide()">Créer l'offre</button>
+        </label>
+      </div>
+  </ion-content>
+</ion-modal-view>
