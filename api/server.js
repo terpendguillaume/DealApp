@@ -212,6 +212,23 @@ apiRoutes.get('/users/:username', function(req, res) {
     })
 });
 
+apiRoutes.post('/users/:username/vouchers', function(req, res) {
+    var username = req.params.username;
+    var id = req.query.id;
+
+    var queryParams = [username, id];
+    var query = "INSERT INTO Associations (user, voucher) VALUES (?, ?)";
+    db.run(query, queryParams, function(err, data){
+        if(err){
+            res.json({ success: false, message: 'This user doesn\'t exist.' });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
+        }
+    })
+});
+
+
 apiRoutes.get('/users/:username/vouchers', function(req, res) {
     var username = req.params.username;
     var seller = req.decoded.seller;
@@ -239,7 +256,7 @@ apiRoutes.delete('/users/:username/vouchers/:id', function(req, res) {
     var queryParams = [username, id];
 
     var query = "DELETE FROM Associations WHERE user = ? AND voucher = ?";
-    db.all(query, queryParams, function(err, data){
+    db.run(query, queryParams, function(err, data){
         if(err){
             res.json({ success: false, message: 'This voucher doesn\'t exist.' });
         }
