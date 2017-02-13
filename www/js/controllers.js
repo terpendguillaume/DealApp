@@ -36,10 +36,10 @@ angular.module('starter.controllers', ['ui.router'])
 
     // logIn
     $scope.logIn = function() {
-        var emailOrUsername = this.loginData.emailOrUsername;
+        var username = this.loginData.username;
         var password = this.loginData.password;
 
-        $http.post("http://localhost:8080/api/login?emailOrUsername=" + emailOrUsername + "&password=" + password)
+        $http.post("http://localhost:8080/api/login?username=" + username + "&password=" + password)
         .then(function(response) {
             console.log(response.data);
             if(response.data.success == true){
@@ -54,11 +54,10 @@ angular.module('starter.controllers', ['ui.router'])
 
     // signUp
     $scope.signUp = function() {
-        var email = this.signupData.email;
         var username = this.signupData.username;
         var password = this.signupData.password;
 
-        $http.post("http://localhost:8080/api/signup?email=" + email + "&username=" + username + "&password=" + password + "&seller=false")
+        $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
         .then(function(response) {
             console.log(response.data);
             if(response.data.success == true){

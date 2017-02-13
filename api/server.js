@@ -52,19 +52,20 @@ apiRoutes.get('/', function(req, res) {
 });
 
 apiRoutes.post('/login', function(req, res) {
-    var emailOrUsername = req.query.emailOrUsername;
+    var username = req.query.username;
     var password = req.query.password;
 
   // find the user from email or username
 
-  var queryParams = [emailOrUsername, emailOrUsername];
-  var query = "SELECT * FROM Users WHERE email = ? OR username = ?";
+  var queryParams = [username];
+  var query = "SELECT * FROM Users WHERE username = ?";
 
   db.get(query, queryParams, function(err, data){
       if(err){
           res.status(500).json(err);
       }
       else{
+          console.log(data);
           if(data == null){
               // if user is not found
               res.json({ success: false, message: 'Authentication failed. User not found.' });
@@ -77,7 +78,7 @@ apiRoutes.post('/login', function(req, res) {
               else{
                   // if user is found and password is right
                   // create a token
-                  var payload = {"email":data.email,"username":data.username,"seller":data.seller};
+                  var payload = {"username":data.username,"seller":data.seller};
                   var token = jwt.sign(payload, app.get('superSecret'), {
                     expiresIn: "2 days" // expires in 24 hours
                   });
@@ -94,14 +95,13 @@ apiRoutes.post('/login', function(req, res) {
 });
 
 apiRoutes.post('/signup', function(req, res){
-    var email = req.query.email;
     var username = req.query.username;
     var password = req.query.password;
     var seller = req.query.seller;
 
-    var queryParams = [email, username, password, seller];
+    var queryParams = [username, password, seller];
 
-    var query = "INSERT INTO Users (email, username, password, seller) VALUES (?, ?, ?, ?)";
+    var query = "INSERT INTO Users (username, password, seller) VALUES (?, ?, ?)";
     db.run(query, queryParams, function(err){
         if(err){
              res.json({ success: false, message: 'Failed to create a new account.' });
@@ -109,7 +109,7 @@ apiRoutes.post('/signup', function(req, res){
         else{
             // if user is successfully created
             // create a token
-            var payload = {"email":email,"username":username,"seller":seller};
+            var payload = {"username":username,"seller":seller};
             var token = jwt.sign(payload, app.get('superSecret'), {
               expiresIn: "2 days" // expires in 48 hours
             });
@@ -188,7 +188,7 @@ apiRoutes.use(function(req, res, next) {
 });
 
 apiRoutes.get('/users', function(req, res) {
-    var query = "SELECT email, username, seller FROM Users";
+    var query = "SELECT username, seller FROM Users";
     db.all(query, function(err, data){
         if(err){
             res.json({ success: false, message: 'Failed to retrieve users\' list.' });
@@ -199,11 +199,11 @@ apiRoutes.get('/users', function(req, res) {
     })
 });
 
-apiRoutes.get('/users/:emailOrUsername', function(req, res) {
-    var emailOrUsername = req.params.emailOrUsername;
-    var queryParams = [emailOrUsername, emailOrUsername];
+apiRoutes.get('/users/:username', function(req, res) {
+    var username = req.params.username;
+    var queryParams = username
 
-    var query = "SELECT email, username, seller FROM Users WHERE email = ? OR username = ?";
+    var query = "SELECT username, seller FROM Users WHERE username = ?";
     db.get(query, queryParams, function(err, data){
         if(err){
             res.json({ success: false, message: 'This user doesn\'t exist.' });
@@ -214,15 +214,15 @@ apiRoutes.get('/users/:emailOrUsername', function(req, res) {
     })
 });
 
-apiRoutes.delete('/users/:emailOrUsername', function(req, res){
-    var emailOrUsername = req.params.emailOrUsername;
+apiRoutes.delete('/users/:username', function(req, res){
+    var username = req.params.username;
 
-    if(emailOrUsername != req.decoded.email && emailOrUsername != req.decoded.username){
+    if(username != req.decoded.username){
         res.json({ success: false, message: 'You need to be logged on this account to delete it.' });
     }
     else{
-        var queryParams = [req.decoded.email];
-        var query = "DELETE FROM Users WHERE email = ?";
+        var queryParams = [req.decoded.username];
+        var query = "DELETE FROM Users WHERE username = ?";
         db.run(query, queryParams, function(err){
             if(err){
                 res.json({ success: false, message: 'Failed to delete your account. Error.' });
@@ -244,7 +244,7 @@ apiRoutes.post('/vouchers', function(req, res){
         res.json({ success: false, message: 'You are not allowed to create a voucher.' });
     }
     else{
-        var owner = req.decoded.email;
+        var owner = req.decoded.username;
         var title = req.query.title;
         var shop = req.query.shop;
         var expiration = req.query.expiration;
