@@ -3,26 +3,26 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Nom du coupon</span>
-          <input type="text" ng-model="addOffreModalData.nameOffer">
+          <input type="text" ng-model="addOffreData.nameOffer">
         </label>
         <label class="item item-input">
           <span class="input-label">Votre Boutique</span>
-          <input type="text" ng-model="addOffreModal.boutique">
+          <input type="text" ng-model="addOffreData.boutique">
         </label>
         <label class="item item-input">
           <span class="input-label">Durée de la réduction</span>
-          <input type="text" ng-model="addOffreModal.reduction">
+          <input type="text" ng-model="addOffreData.reductionDuree">
         </label>
         <label class="item item-input">
           <span class="input-label">Montant réduction</span>
-          <input type="text" ng-model="addOffreModal.reduction">
+          <input type="text" ng-model="addOffreData.reductionMontant">
         </label>
         <label class="item item-input">
           <span class="input-label">Description</span>
-          <input type="text" ng-model="addOffreModal.description">
+          <input type="text" ng-model="addOffreData.description">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" ng-click="addOffreModal.hide()">Créer l'offre</button>
+          <button class="button button-block button-positive" ng-click="addOffer.hide()">Créer l'offre</button>
         </label>
       </div>
   </ion-content>

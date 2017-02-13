@@ -60,8 +60,11 @@ angular.module('starter.controllers', ['ui.router'])
         var username = this.signupData.username;
         var password = this.signupData.password;
         var isGerant = this.signupData.isGerant;
-        console.log(isGerant); // modifier la requete http
+        console.log(isGerant);
 
+        // // // // // // // // // //
+        // modifier la requete http //
+        // // // // // // // // // //
         $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
         .then(function(response) {
             if(response.data.success == true){
@@ -145,6 +148,18 @@ angular.module('starter.controllers', ['ui.router'])
         $scope.addOffreModal = modal;
     });
 
+    $scope.addOffer = function() {
+        var nameOffer = this.addOffer.nameOffer;
+        var boutique = this.addOffer.boutique;
+        var reductionDuree = this.addOffer.reductionDuree;
+        var reductionMontant = this.addOffer.reductionMontant;
+        var description = this.addOffer.description;
+         // // // // // // // // // // // // // // // // // // //
+        // $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
+        // .then(function(response) {
+        // });
+    }    // // // // // // // // // // // // // // // // // // // // // //
+
     $http.get("http://localhost:8080/api/users/" + getToken().username + "/vouchers?token=" + token())
     .then(function(response) {
         console.log(response.data.vouchers);
@@ -161,6 +176,10 @@ angular.module('starter.controllers', ['ui.router'])
         confirmPopup.then(function(res) {
             if(res) {
                 console.log('Vous êtes sûr');
+                 // // // // // // // // // // // // // // // // // // //
+                // $http.delete("http://localhost:8080/api/users/" + getToken().username + "/vouchers?token=" + token())
+                // .then(function(response) {
+                // }); // // // // // // // // // // // // // // // // //
             } else {
                 console.log('Vous n\'êtes pas sûr');
             }
@@ -205,7 +224,7 @@ angular.module('starter.controllers', ['ui.router'])
             $scope.client = false;
         }
 
-        //  popup de confirmations
+        //  popup de confirmations selection coupon
         $scope.showConfirm = function() {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Sélectionner l\'offre',
@@ -214,7 +233,12 @@ angular.module('starter.controllers', ['ui.router'])
 
             confirmPopup.then(function(res) {
                 if(res) {
+                    // confirmation
                     console.log('Vous êtes sûr');
+                     // // // // // // // // // // // // // // // // // //
+                    // $http.put("http://localhost:8080/api/login?username=" + username + "&password=" + password)
+                    // .then(function(response) {
+                    // }); // // // // // // // // // // // // // // // //
                 } else {
                     console.log('Vous n\'êtes pas sûr');
                 }
