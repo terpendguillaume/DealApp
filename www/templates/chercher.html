@@ -1,9 +1,19 @@
-<ion-view view-title="Echanger vos offres !">
+<ion-view view-title="Echanger vos coupons !">
   <ion-content class="padding">
+    <ion-list>
+      <!-- TODO -->
+      <ion-item ng-repeat="offerchercher in offerschercher" type="item-text-wrap">
+        {{offerchercher.title}}
+        <p>{{offerchercher.shop}}</p>
+        <p>{{offerchercher.expiration}}</p>
+        <p><b>-{{offerchercher.value}}%</b></p>
+        <p>{{offerchercher.description}}</p>
+        <button class="button button-small button-positive" ng-show="true" ng-click="showConfirm()">Envoyer une demande</button>
+      </ion-item>
+    </ion-list>
     <div class="todo">
       <p>-----TODO------</p>
       <h4>Client</h4>
-      <p>Poster une offre chercher (nom boutique, montant)</p>
       <p>Bouton request -> envoie message </p>
     </div>
   </ion-content>

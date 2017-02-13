@@ -1,9 +1,21 @@
-<ion-view view-title="Echanger vos offres !">
+<ion-view view-title="Echanger vos coupons !">
   <ion-content class="padding">
+    <button class="button button-block button-positive" ng-show="true" ng-click="posterOffreModal.show()">Proposer un coupon</button>
+    <ion-list>
+      <!-- TODO -->
+      <ion-item ng-repeat="offerposter in offersposter" type="item-text-wrap">
+        {{offerposter.title}}
+        <p>{{offerposter.shop}}</p>
+        <p>{{offerposter.expiration}}</p>
+        <p><b>-{{offerposter.value}}%</b></p>
+        <p>{{offerposter.description}}</p>
+        <button class="button button-small button-positive" ng-show="seller" ng-click="showConfirm()">Retirer le coupon</button>
+      </ion-item>
+    </ion-list>
     <div class="todo">
       <p>-----TODO------</p>
       <h4>Client</h4>
-      <p>Poster une offre donner (nom boutique, montant)</p>
+      <p>Poster une offre donner</p>
     </div>
   </ion-content>
 </ion-view>

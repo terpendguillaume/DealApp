@@ -1,15 +1,14 @@
-<ion-view view-title="Vos Offres">
+<ion-view view-title="Vos Coupons">
   <ion-content class="padding">
-    <button class="button button-block button-positive" ng-show="seller" ng-click="addOffreModal.show()">Ajouter une nouvelle offre</button>
+    <button class="button button-block button-positive" ng-show="seller" ng-click="addOffreModal.show()">Ajouter un nouveau coupon</button>
     <ion-list>
       <ion-item ng-repeat="myoffer in myoffers" type="item-text-wrap">
-        <i class="icon {{myoffer.icon}}"></i>
         {{myoffer.title}}
         <p>{{myoffer.shop}}</p>
         <p>{{myoffer.expiration}}</p>
         <p><b>-{{myoffer.value}}%</b></p>
         <p>{{myoffer.description}}</p>
-        <button class="button button-small button-positive" ng-show="seller" ng-click="showConfirm()">Supprimer l'offre</button>
+        <button class="button button-small button-positive" ng-show="seller" ng-click="showConfirm()">Supprimer le coupon</button>
       </ion-item>
     </ion-list>
     <div class="todo">

@@ -2,9 +2,12 @@ angular.module('starter.controllers', ['ui.router'])
 
 // Menu
 .controller('MenuCtrl',function($scope, $ionicSideMenuDelegate){
-    $scope.toggleLeft = function() {
-        $ionicSideMenuDelegate.toggleLeft();
-    };
+  if(getToken()){
+      $scope.connected=true;
+  }
+  else{
+      $scope.connected=false;
+  }
 })
 
 //Compte
@@ -45,7 +48,6 @@ angular.module('starter.controllers', ['ui.router'])
                 setToken(token);
                 $window.location.reload(true);
                 $scope.loginModal.hide();
-                // $route.reload();
             }
             else{
               $scope.error=true;
@@ -65,7 +67,7 @@ angular.module('starter.controllers', ['ui.router'])
             if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
-              // $window.location.reload(true);
+                $window.location.reload(true);
                 $scope.signupModal.hide();
             }
             else{
@@ -84,10 +86,7 @@ angular.module('starter.controllers', ['ui.router'])
         confirmPopup.then(function(res) {
             if(res) {
                 deleteToken();
-                console.log('Vous êtes sûr');
                 $window.location.reload(true);
-            } else {
-                console.log('Vous n\'êtes pas sûr');
             }
         });
     };
@@ -111,9 +110,6 @@ angular.module('starter.controllers', ['ui.router'])
                         $window.location.reload(true);
                     }
                 });
-                console.log('Vous êtes sûr');
-            } else {
-                console.log('Vous n\'êtes pas sûr');
             }
         });
     };
@@ -183,7 +179,6 @@ angular.module('starter.controllers', ['ui.router'])
 })
 
 // Toutes les offres
-
 .controller('OffresCtrl', function($scope, $http) {
     $http.get("http://localhost:8080/api/vouchers")
     .then(function(response) {
@@ -196,7 +191,6 @@ angular.module('starter.controllers', ['ui.router'])
     $http.get("http://localhost:8080/api/vouchers/" + $stateParams.offerId)
     .then(function(response) {
         $scope.offer = response.data.voucher;
-
 
         if(getToken()){
             console.log(getToken());
@@ -227,6 +221,16 @@ angular.module('starter.controllers', ['ui.router'])
             });
         };
     });
+})
+
+.controller('PosterCtrl', function($scope, $ionicModal){
+  $ionicModal.fromTemplateUrl('templates/posteroffre.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+  }).then(function(modal) {
+      $scope.posterOffreModal = modal;
+  });
+
 });
 
 function token(){

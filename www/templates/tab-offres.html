@@ -1,8 +1,7 @@
-<ion-view view-title="Toutes les offres">
+<ion-view view-title="Toutes les coupons">
   <ion-content class="padding">
     <ion-list>
       <ion-item ng-repeat="offer in offers" type="item-text-wrap" href="#/tab/offres/{{offer.id}}">
-        <i class="icon {{offer.icon}}"></i>
         {{offer.title}}
         <p>{{offer.shop}}</p>
         <p><b>-{{offer.value}}%</b></p>

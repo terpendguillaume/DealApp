@@ -1,8 +1,7 @@
-<ion-view view-title="Populaires">
+<ion-view view-title="Coupons populaires">
   <ion-content class="padding">
     <ion-list>
       <ion-item ng-repeat="offer in offersPop" type="item-text-wrap" href="#/tab/populaires/{{offer.id}}">
-        <i class="icon {{offer.icon}}"></i>
         {{offer.title}}
         <p>{{offer.shop}}</p>
         <p><b>-{{offer.value}}%</b></p>

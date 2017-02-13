@@ -1,4 +1,4 @@
-<ion-view view-title="Détails de l'offre">
+<ion-view view-title="Détails du coupon">
   <ion-content class="padding">
     <h3>{{offer.title}}</h3>
     <p>Magasin : {{offer.shop}}</p>
@@ -6,7 +6,7 @@
     <p>Montant de la réduction : <b>-{{offer.value}}%</b></p>
     <p>Description de l'offre : {{offer.description}}</p>
     <p>Auteur du coupon de réduction : {{offer.owner}}</p>
-    <button class="button button-small button-positive" ng-show="client" ng-click="showConfirm()">Sélectionner l'offre</button>
+    <button class="button button-small button-positive" ng-show="client" ng-click="showConfirm()">Sélectionner le coupon</button>
     <div class="todo">
       <p>-----TODO------</p>
       <h4>Client</h4>
