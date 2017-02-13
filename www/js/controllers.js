@@ -8,22 +8,44 @@ angular.module('starter.controllers', [])
 })
 
 //Compte
-.controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup) {
+.controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http) {
     // log in
     $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
         $scope.loginModal = modal;
+        console.log("window opened");
     });
 
     // sign Up
     $ionicModal.fromTemplateUrl('templates/signup.html', {
         scope: $scope,
         animation: 'slide-in-up'
+
     }).then(function(modal) {
         $scope.signupModal = modal;
+        console.log("window opened");
     });
+
+    // signUp
+    $scope.signUp = function() {
+        var email = this.signupData.email;
+        var username = this.signupData.username;
+        var password = this.signupData.password;
+
+        $http.post("http://localhost:8080/api/signup?email=" + email + "&username=" + username + "&password=" + password + "&seller=false")
+        .then(function(response) {
+            console.log(response.data);
+            if(response.data.success){
+                var token = response.data.token;
+                setToken(token);
+                $scope.signupModal.hide();
+            }
+        });
+
+
+    }
 
     // log out
     $scope.showLogout = function() {
@@ -161,3 +183,19 @@ angular.module('starter.controllers', [])
         };
     });
 });
+
+function token(){
+	return window.localStorage.getItem("dealapp-token");
+}
+
+function getToken(){
+	return parseJwt(token());
+}
+
+function setToken(token){
+	window.localStorage.setItem("dealapp-token", token);
+}
+
+function deleteToken(){
+	window.localStorage.removeItem("dealapp-token");
+}

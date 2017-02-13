@@ -119,3 +119,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $urlRouterProvider.otherwise('/tab/populaires');
 
 });
+
+function token(){
+	return window.localStorage.getItem("dealapp-token");
+}
+
+function getToken(){
+	return parseJwt(token());
+}
+
+function setToken(token){
+	window.localStorage.setItem("dealapp-token", token);
+}
+
+function deleteToken(){
+	window.localStorage.removeItem("dealapp-token");
+}
