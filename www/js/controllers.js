@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ui.router'])
 
 // Menu
 .controller('MenuCtrl',function($scope, $ionicSideMenuDelegate){
@@ -8,10 +8,10 @@ angular.module('starter.controllers', [])
 })
 
 //Compte
-.controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http) {
+.controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http, $window) {
     // log in
     console.log("token : " + token());
-    if(token()){
+    if(getToken()){
         $scope.token = true;
         $scope.user = getToken();
     }
@@ -23,7 +23,6 @@ angular.module('starter.controllers', [])
         animation: 'slide-in-up'
     }).then(function(modal) {
         $scope.loginModal = modal;
-        console.log("window opened");
     });
 
     // sign Up
@@ -33,7 +32,6 @@ angular.module('starter.controllers', [])
 
     }).then(function(modal) {
         $scope.signupModal = modal;
-        console.log("window opened");
     });
 
     // logIn
@@ -44,9 +42,10 @@ angular.module('starter.controllers', [])
         $http.post("http://localhost:8080/api/login?emailOrUsername=" + emailOrUsername + "&password=" + password)
         .then(function(response) {
             console.log(response.data);
-            if(response.data.success){
+            if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
+                $window.location.reload(true);
                 $scope.loginModal.hide();
                 // $route.reload();
             }
@@ -62,11 +61,11 @@ angular.module('starter.controllers', [])
         $http.post("http://localhost:8080/api/signup?email=" + email + "&username=" + username + "&password=" + password + "&seller=false")
         .then(function(response) {
             console.log(response.data);
-            if(response.data.success){
+            if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
+                $window.location.reload(true);
                 $scope.signupModal.hide();
-                // $route.reload();
             }
         });
     }
@@ -82,7 +81,7 @@ angular.module('starter.controllers', [])
             if(res) {
                 deleteToken();
                 console.log('Vous êtes sûr');
-                // $route.reload();
+                $window.location.reload(true);
             } else {
                 console.log('Vous n\'êtes pas sûr');
             }
@@ -101,8 +100,9 @@ angular.module('starter.controllers', [])
                 $http.delete("http://localhost:8080/api/users/" + getToken().email + "?token=" + token())
                 .then(function(response) {
                     console.log(response.data);
-                    if(response.data.success){
+                    if(response.data.success == true){
                         deleteToken();
+                        $window.location.reload(true);
                         $scope.signupModal.hide();
                         // $route.reload();
                     }
@@ -175,6 +175,20 @@ angular.module('starter.controllers', [])
     $http.get("http://localhost:8080/api/vouchers/" + $stateParams.offerId)
     .then(function(response) {
         $scope.offer = response.data.voucher;
+
+
+        if(getToken()){
+            console.log(getToken());
+            if(getToken().seller == "true"){
+                $scope.client = false;
+            }
+            else{
+                $scope.client = true;
+            }
+        }
+        else{
+            $scope.client = false;
+        }
 
         //  popup de confirmations
         $scope.showConfirm = function() {

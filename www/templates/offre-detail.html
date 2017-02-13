@@ -6,7 +6,7 @@
     <p>Montant de la réduction : <b>-{{offer.value}}%</b></p>
     <p>Description de l'offre : {{offer.description}}</p>
     <p>Auteur du coupon de réduction : {{offer.owner}}</p>
-    <button class="button button-small button-positive" ng-click="showConfirm()">Sélectionner l'offre</button>
+    <button class="button button-small button-positive" ng-show="client" ng-click="showConfirm()">Sélectionner l'offre</button>
     <div class="todo">
       <p>-----TODO------</p>
       <h4>Client</h4>
