@@ -10,6 +10,14 @@ angular.module('starter.controllers', [])
 //Compte
 .controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http) {
     // log in
+    console.log("token : " + token());
+    if(token()){
+        $scope.token = true;
+        $scope.user = getToken();
+    }
+    else{
+        $scope.token = false;
+    }
     $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -28,6 +36,23 @@ angular.module('starter.controllers', [])
         console.log("window opened");
     });
 
+    // logIn
+    $scope.logIn = function() {
+        var emailOrUsername = this.loginData.emailOrUsername;
+        var password = this.loginData.password;
+
+        $http.post("http://localhost:8080/api/login?emailOrUsername=" + emailOrUsername + "&password=" + password)
+        .then(function(response) {
+            console.log(response.data);
+            if(response.data.success){
+                var token = response.data.token;
+                setToken(token);
+                $scope.loginModal.hide();
+                // $route.reload();
+            }
+        });
+    }
+
     // signUp
     $scope.signUp = function() {
         var email = this.signupData.email;
@@ -41,10 +66,9 @@ angular.module('starter.controllers', [])
                 var token = response.data.token;
                 setToken(token);
                 $scope.signupModal.hide();
+                // $route.reload();
             }
         });
-
-
     }
 
     // log out
@@ -56,7 +80,9 @@ angular.module('starter.controllers', [])
 
         confirmPopup.then(function(res) {
             if(res) {
+                deleteToken();
                 console.log('Vous êtes sûr');
+                // $route.reload();
             } else {
                 console.log('Vous n\'êtes pas sûr');
             }
@@ -72,6 +98,15 @@ angular.module('starter.controllers', [])
 
         confirmPopup.then(function(res) {
             if(res) {
+                $http.delete("http://localhost:8080/api/users/" + getToken().email + "?token=" + token())
+                .then(function(response) {
+                    console.log(response.data);
+                    if(response.data.success){
+                        deleteToken();
+                        $scope.signupModal.hide();
+                        // $route.reload();
+                    }
+                });
                 console.log('Vous êtes sûr');
             } else {
                 console.log('Vous n\'êtes pas sûr');
@@ -126,41 +161,16 @@ angular.module('starter.controllers', [])
     });
 })
 
-// Offres Populaires Details
-.controller('OffrePopDetailCtrl', function($scope, $stateParams, $ionicPopup, $http) {
-    $http.get("http://localhost:8080/api/vouchers/" + $stateParams.offerPopId)
-    .then(function(response) {
-        $scope.offerPop = response.data.voucher;
-
-        //  popup de confirmations
-        $scope.showConfirm = function() {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Sélectionner l\'offre',
-                template: 'Etes-vous sûr de vouloir choisir cette offre ?'
-            });
-
-            confirmPopup.then(function(res) {
-                if(res) {
-                    console.log('Vous êtes sûr');
-                } else {
-                    console.log('Vous n\'êtes pas sûr');
-                }
-            });
-        };
-    });
-})
-
 // Toutes les offres
 
 .controller('OffresCtrl', function($scope, $http) {
     $http.get("http://localhost:8080/api/vouchers")
     .then(function(response) {
-        console.log(response.data.vouchers);
         $scope.offers = response.data.vouchers;
     });
 })
 
-// Toutes les offres details
+// Offres details
 .controller('OffreDetailCtrl', function($scope, $stateParams, $ionicPopup, $http) {
     $http.get("http://localhost:8080/api/vouchers/" + $stateParams.offerId)
     .then(function(response) {
@@ -199,3 +209,14 @@ function setToken(token){
 function deleteToken(){
 	window.localStorage.removeItem("dealapp-token");
 }
+
+function parseJwt (token) {
+	if(token){
+		var base64Url = token.split('.')[1];
+		var base64 = base64Url.replace('-', '+').replace('_', '/');
+		return JSON.parse(window.atob(base64));
+	}
+	else{
+		return null;
+	}
+};

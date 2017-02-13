@@ -1,12 +1,12 @@
 <ion-view view-title="Populaires">
   <ion-content class="padding">
     <ion-list>
-      <ion-item ng-repeat="offerPop in offersPop" type="item-text-wrap" href="#/tab/populaires/{{offerPop.id}}">
-        <i class="icon {{offerPop.icon}}"></i>
-        {{offerPop.title}}
-        <p>{{offerPop.shop}}</p>
-        <p><b>-{{offerPop.value}}%</b></p>
-        <p>Déjà {{offerPop.buyers}} personnes ont sélectionné ce coupon ! N'attendez plus !</p>
+      <ion-item ng-repeat="offer in offersPop" type="item-text-wrap" href="#/tab/populaires/{{offer.id}}">
+        <i class="icon {{offer.icon}}"></i>
+        {{offer.title}}
+        <p>{{offer.shop}}</p>
+        <p><b>-{{offer.value}}%</b></p>
+        <p>Déjà {{offer.buyers}} personnes ont sélectionné ce coupon ! N'attendez plus !</p>
       </ion-item>
     </ion-list>
     <div>

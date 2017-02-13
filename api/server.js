@@ -52,19 +52,14 @@ apiRoutes.get('/', function(req, res) {
 });
 
 apiRoutes.post('/login', function(req, res) {
-    var email = req.query.email;
-    var username = req.query.username;
+    var emailOrUsername = req.query.emailOrUsername;
     var password = req.query.password;
 
   // find the user from email or username
-  if(email){
-      var queryParams = [email];
-      var query = "SELECT * FROM Users WHERE email = ?";
-  }
-  else{
-      var queryParams = [username];
-      var query = "SELECT * FROM Users WHERE username = ?";
-  }
+
+  var queryParams = [emailOrUsername, emailOrUsername];
+  var query = "SELECT * FROM Users WHERE email = ? OR username = ?";
+
   db.get(query, queryParams, function(err, data){
       if(err){
           res.status(500).json(err);
@@ -128,31 +123,69 @@ apiRoutes.post('/signup', function(req, res){
     })
 });
 
+
+apiRoutes.get('/vouchers', function(req, res) {
+    var top = req.query.top;
+
+    if(top){
+        var query = "SELECT id, owner, title, shop, expiration, value, description, COUNT(Vouchers.id) as buyers FROM Vouchers INNER JOIN Associations ON Vouchers.id = Associations.voucher GROUP BY id ORDER BY buyers DESC LIMIT ?";
+    }
+    else{
+        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers";
+
+    }
+
+    db.all(query, top, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'Failed to retrieve vouchers\' list.' });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
+        }
+    })
+});
+
+apiRoutes.get('/vouchers/:id', function(req, res) {
+    var id = req.params.id;
+    var queryParams = [id];
+console.log(id);
+    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE id = ?";
+    db.get(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'This voucher doesn\'t exist.' });
+        }
+        else{
+            res.json({ success: true, voucher: data });
+        }
+    })
+});
+
+
 // route middleware to verify a token
-// apiRoutes.use(function(req, res, next) {
-//   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-//
-//   // decode token
-//   if (token) {
-//     // verifies secret and checks exp
-//     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-//       if (err) {
-//         return res.json({ success: false, message: 'Failed to authenticate token.' });
-//       } else {
-//         // if everything is good, save to request for use in other routes
-//         req.decoded = decoded;
-//         next();
-//       }
-//   });
-//   } else {
-//     // if there is no token
-//     // return an error
-//     return res.status(403).send({
-//         success: false,
-//         message: 'No token provided.'
-//     });
-//   }
-// });
+apiRoutes.use(function(req, res, next) {
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  // decode token
+  if (token) {
+    // verifies secret and checks exp
+    jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+  });
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+    });
+  }
+});
 
 apiRoutes.get('/users', function(req, res) {
     var query = "SELECT email, username, seller FROM Users";
@@ -183,14 +216,13 @@ apiRoutes.get('/users/:emailOrUsername', function(req, res) {
 
 apiRoutes.delete('/users/:emailOrUsername', function(req, res){
     var emailOrUsername = req.params.emailOrUsername;
-    var password = req.query.password;
 
     if(emailOrUsername != req.decoded.email && emailOrUsername != req.decoded.username){
         res.json({ success: false, message: 'You need to be logged on this account to delete it.' });
     }
     else{
-        var queryParams = [req.decoded.email, password];
-        var query = "DELETE FROM Users WHERE email = ? AND password = ?";
+        var queryParams = [req.decoded.email];
+        var query = "DELETE FROM Users WHERE email = ?";
         db.run(query, queryParams, function(err){
             if(err){
                 res.json({ success: false, message: 'Failed to delete your account. Error.' });
@@ -236,42 +268,6 @@ apiRoutes.post('/vouchers', function(req, res){
             }
         })
     }
-});
-
-apiRoutes.get('/vouchers', function(req, res) {
-    var top = req.query.top;
-
-    if(top){
-        var query = "SELECT id, owner, title, shop, expiration, value, description, COUNT(Vouchers.id) as buyers FROM Vouchers INNER JOIN Associations ON Vouchers.id = Associations.voucher GROUP BY id ORDER BY buyers DESC LIMIT ?";
-    }
-    else{
-        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers";
-
-    }
-
-    db.all(query, top, function(err, data){
-        if(err){
-             res.json({ success: false, message: 'Failed to retrieve vouchers\' list.' });
-        }
-        else{
-            res.json({ success: true, vouchers: data });
-        }
-    })
-});
-
-apiRoutes.get('/vouchers/:id', function(req, res) {
-    var id = req.params.id;
-    var queryParams = [id];
-console.log(id);
-    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE id = ?";
-    db.get(query, queryParams, function(err, data){
-        if(err){
-             res.json({ success: false, message: 'This voucher doesn\'t exist.' });
-        }
-        else{
-            res.json({ success: true, voucher: data });
-        }
-    })
 });
 
 apiRoutes.delete('/vouchers/:id', function(req, res){

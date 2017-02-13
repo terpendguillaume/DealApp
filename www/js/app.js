@@ -41,11 +41,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   //detail offres populaires
   .state('tab.offrePop-detail', {
-    url: '/populaires/:offerPopId',
+    url: '/populaires/:offerId',
     views: {
       'tab-populaires': {
-        templateUrl: 'templates/offrePop-detail.html',
-        controller: 'OffrePopDetailCtrl'
+          templateUrl: 'templates/offre-detail.html',
+          controller: 'OffreDetailCtrl'
       }
     }
   })
@@ -119,19 +119,3 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $urlRouterProvider.otherwise('/tab/populaires');
 
 });
-
-function token(){
-	return window.localStorage.getItem("dealapp-token");
-}
-
-function getToken(){
-	return parseJwt(token());
-}
-
-function setToken(token){
-	window.localStorage.setItem("dealapp-token", token);
-}
-
-function deleteToken(){
-	window.localStorage.removeItem("dealapp-token");
-}

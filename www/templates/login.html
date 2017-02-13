@@ -3,14 +3,14 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Nom d'utilisateur</span>
-          <input type="text" ng-model="loginData.username">
+          <input type="text" ng-model="loginData.emailOrUsername">
         </label>
         <label class="item item-input">
           <span class="input-label">Mot de passe</span>
           <input type="password" ng-model="loginData.password">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" ng-click="loginModal.hide()">Valider</button>
+          <button class="button button-block button-positive" ng-click="logIn()">Valider</button>
         </label>
       </div>
   </ion-content>
