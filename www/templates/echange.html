@@ -1,12 +1,18 @@
-<ion-view view-title="Echager vos offres !">
-  <ion-content class="padding">
-    <div class="todo">
-      <p>-----TODO------</p>
-      <h4>Client</h4>
-      <p>Poster une offre donner (nom boutique, montant)</p>
-      <p>Poster une offre chercher (nom boutique, montant)</p>
-      <p>bouton request -> envoie message </p>
-      <p> 2 onglets ?</p>
-    </div>
-  </ion-content>
-</ion-view>
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+  <!-- Chercher Tab -->
+  <ion-tab title="Chercher une offre" icon-off="ion-ios-search" icon-on="ion-ios-search" href="#/echange/chercher">
+    <ion-nav-view name="chercher"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Poster Tab -->
+  <ion-tab title="Poster une offre" icon-off="ion-ios-create" icon-on="ion-plus-circled" href="#/echange/poster">
+    <ion-nav-view name="poster"></ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>

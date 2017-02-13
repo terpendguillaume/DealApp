@@ -86,11 +86,33 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     controller: 'MesOffresCtrl'
   })
 
-  // les echanges d'offres entre client
+  // Echange
   .state('echange', {
     url: '/echange',
-    templateUrl: 'templates/echange.html',
-    // controller: 'EchangeCtrl'
+    abstract: true,
+    templateUrl: 'templates/echange.html'
+  })
+
+  // Echange chercher
+  .state('echange.chercher', {
+    url: '/chercher',
+    views: {
+      'chercher': {
+        templateUrl: 'templates/chercher.html',
+        // controller: 'ChercherCtrl'
+      }
+    }
+  })
+
+  // Echange Poster
+  .state('echange.poster', {
+    url: '/poster',
+    views: {
+      'poster': {
+        templateUrl: 'templates/poster.html',
+        // controller: 'PosterCtrl'
+      }
+    }
   });
 
   // url apr défauts si mauvaise url
