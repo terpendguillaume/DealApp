@@ -47,6 +47,9 @@ angular.module('starter.controllers', ['ui.router'])
                 $scope.loginModal.hide();
                 // $route.reload();
             }
+            else{
+              $scope.error=true;
+            }
         });
     }
 
@@ -54,14 +57,19 @@ angular.module('starter.controllers', ['ui.router'])
     $scope.signUp = function() {
         var username = this.signupData.username;
         var password = this.signupData.password;
+        var isGerant = this.signupData.isGerant;
+        console.log(isGerant); // modifier la requete http
 
         $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
         .then(function(response) {
             if(response.data.success == true){
                 var token = response.data.token;
                 setToken(token);
-                $window.location.reload(true);
+              // $window.location.reload(true);
                 $scope.signupModal.hide();
+            }
+            else{
+              $scope.error=true;
             }
         });
     }
@@ -100,7 +108,7 @@ angular.module('starter.controllers', ['ui.router'])
                         deleteToken();
                         $window.location.reload(true);
                         $scope.signupModal.hide();
-                        // $route.reload();
+                        $window.location.reload(true);
                     }
                 });
                 console.log('Vous êtes sûr');
