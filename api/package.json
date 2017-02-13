@@ -1,0 +1,11 @@
+{
+  "name": "node-token-jwt",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "jsonwebtoken": "^7.2.1",
+    "morgan": "^1.8.1",
+    "sqlite3": "^3.1.8"
+  }
+}
