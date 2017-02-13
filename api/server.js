@@ -129,30 +129,30 @@ apiRoutes.post('/signup', function(req, res){
 });
 
 // route middleware to verify a token
-apiRoutes.use(function(req, res, next) {
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-  // decode token
-  if (token) {
-    // verifies secret and checks exp
-    jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
-      } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
-        next();
-      }
-  });
-  } else {
-    // if there is no token
-    // return an error
-    return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
-    });
-  }
-});
+// apiRoutes.use(function(req, res, next) {
+//   var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//
+//   // decode token
+//   if (token) {
+//     // verifies secret and checks exp
+//     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+//       if (err) {
+//         return res.json({ success: false, message: 'Failed to authenticate token.' });
+//       } else {
+//         // if everything is good, save to request for use in other routes
+//         req.decoded = decoded;
+//         next();
+//       }
+//   });
+//   } else {
+//     // if there is no token
+//     // return an error
+//     return res.status(403).send({
+//         success: false,
+//         message: 'No token provided.'
+//     });
+//   }
+// });
 
 apiRoutes.get('/users', function(req, res) {
     var query = "SELECT email, username, seller FROM Users";
@@ -219,13 +219,9 @@ apiRoutes.post('/vouchers', function(req, res){
         var value = req.query.value;
         var description = req.query.description;
 
-        // if(description){
-            var queryParams = [owner, title, shop, expiration, value, description];
-            var query = "INSERT INTO Vouchers (owner, title, shop, expiration, value, description) VALUES (?, ?, ?, ?, ?, ?)";
-        // } else {
-            // var queryParams = [owner, title, shop, expiration, value];
-            // var query = "INSERT INTO Vouchers (owner, title, shop, expiration, value) VALUES (?, ?, ?, ?, ?)";
-        // }
+        var queryParams = [owner, title, shop, expiration, value, description];
+        var query = "INSERT INTO Vouchers (owner, title, shop, expiration, value, description) VALUES (?, ?, ?, ?, ?, ?)";
+
 
         db.run(query, queryParams, function(err){
             if(err){
@@ -243,9 +239,17 @@ apiRoutes.post('/vouchers', function(req, res){
 });
 
 apiRoutes.get('/vouchers', function(req, res) {
-    var query = "SELECT id, title, shop, expiration, value FROM Vouchers";
+    var top = req.query.top;
 
-    db.all(query, function(err, data){
+    if(top){
+        var query = "SELECT id, owner, title, shop, expiration, value, description, COUNT(Vouchers.id) as buyers FROM Vouchers INNER JOIN Associations ON Vouchers.id = Associations.voucher GROUP BY id ORDER BY buyers DESC LIMIT ?";
+    }
+    else{
+        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers";
+
+    }
+
+    db.all(query, top, function(err, data){
         if(err){
              res.json({ success: false, message: 'Failed to retrieve vouchers\' list.' });
         }
@@ -258,8 +262,8 @@ apiRoutes.get('/vouchers', function(req, res) {
 apiRoutes.get('/vouchers/:id', function(req, res) {
     var id = req.params.id;
     var queryParams = [id];
-console.log(idOrTitle);
-    var query = "SELECT * FROM Vouchers WHERE id = ?";
+console.log(id);
+    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE id = ?";
     db.get(query, queryParams, function(err, data){
         if(err){
              res.json({ success: false, message: 'This voucher doesn\'t exist.' });
