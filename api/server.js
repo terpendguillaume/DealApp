@@ -123,7 +123,6 @@ apiRoutes.post('/signup', function(req, res){
     })
 });
 
-
 apiRoutes.get('/vouchers', function(req, res) {
     var top = req.query.top;
 
@@ -148,7 +147,7 @@ apiRoutes.get('/vouchers', function(req, res) {
 apiRoutes.get('/vouchers/:id', function(req, res) {
     var id = req.params.id;
     var queryParams = [id];
-console.log(id);
+
     var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE id = ?";
     db.get(query, queryParams, function(err, data){
         if(err){
@@ -159,7 +158,6 @@ console.log(id);
         }
     })
 });
-
 
 // route middleware to verify a token
 apiRoutes.use(function(req, res, next) {
@@ -210,6 +208,21 @@ apiRoutes.get('/users/:username', function(req, res) {
         }
         else{
             res.json({ success: true, user: data });
+        }
+    })
+});
+
+apiRoutes.get('/users/:username/vouchers', function(req, res) {
+    var username = req.params.username;
+    var queryParams = username
+
+    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
+    db.all(query, queryParams, function(err, data){
+        if(err){
+            res.json({ success: false, message: 'This user doesn\'t exist.' });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
         }
     })
 });
