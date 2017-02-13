@@ -1,9 +1,11 @@
-<ion-view view-title="{{offerPop.title}}">
+<ion-view view-title="Détails de l'offre">
   <ion-content class="padding">
-      <p>{{offerPop.description}}</p>
-      <p>{{offerPop.shop}}</p>
-      <p>{{offerPop.timeout}}</p>
-      <p><b>{{offerPop.reduction}}</b></p>
+      <h3>{{offerPop.title}}</h3>
+      <p>Magasin : {{offerPop.shop}}</p>
+      <p>Date d'expiration : {{offerPop.expiration}}</p>
+      <p>Montant de la réduction : <b>-{{offerPop.value}}%</b></p>
+      <p>Description de l'offre : {{offerPop.description}}</p>
+      <p>Auteur du coupon de réduction : {{offerPop.owner}}</p>
       <button class="button button-small button-positive" ng-click="showConfirm()">Sélectionner l'offre</button>
     <div class="todo">
       <p>-----TODO------</p>
