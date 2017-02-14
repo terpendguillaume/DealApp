@@ -7,14 +7,7 @@
     <button class="button button-block button-positive" ng-show="!token" ng-click="signupModal.show()">S'inscrire</button>
     <button class="button button-block button-positive" ng-show="token" ng-click="showLogout()">Se déconnecter</button>
     <div class="info" ng-show="token">
-      <p>Adresse email : <b>{{user.email}}</b></p>
-      <p>Nom d'utilisateur : {{user.username}}</p>
-      <div ng-show="{{user.seller}}">
-        <p>Type de compte : Vendeur<p>
-        </div>
-        <div ng-show="!{{user.seller}}">
-          <p>Type de compte : Client<p>
-          </div>
+      <p>Vous êtes connecté en tant que : <b>{{user.username}}</b></p>
           <button class="button button-small button-positive" ng-click="showSupprimer()">Supprimer le compte</button>
         </div>
         <div class="card">

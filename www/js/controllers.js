@@ -13,6 +13,7 @@ angular.module('starter.controllers', ['ui.router'])
 //Compte
 .controller('AccountCtrl', function($scope, $ionicModal, $ionicPopup, $http, $window) {
     // log in
+    console.log(token());
     if(getToken()){
         $scope.token = true;
         $scope.user = getToken();
@@ -60,12 +61,11 @@ angular.module('starter.controllers', ['ui.router'])
         var username = this.signupData.username;
         var password = this.signupData.password;
         var isGerant = this.signupData.isGerant;
-        console.log(isGerant);
 
         // // // // // // // // // //
         // modifier la requete http //
         // // // // // // // // // //
-        $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
+        $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=" + isGerant)
         .then(function(response) {
             if(response.data.success == true){
                 var token = response.data.token;
@@ -103,12 +103,12 @@ angular.module('starter.controllers', ['ui.router'])
 
         confirmPopup.then(function(res) {
             if(res) {
-                $http.delete("http://localhost:8080/api/users/" + getToken().email + "?token=" + token())
+              console.log("http://localhost:8080/api/users/" + getToken().username + "?token=" + token());
+                $http.delete("http://localhost:8080/api/users/" + getToken().username + "?token=" + token())
                 .then(function(response) {
                     console.log(response.data);
                     if(response.data.success == true){
                         deleteToken();
-                        $window.location.reload(true);
                         $scope.signupModal.hide();
                         $window.location.reload(true);
                     }
@@ -125,7 +125,7 @@ angular.module('starter.controllers', ['ui.router'])
 })
 
 // Mes offres
-.controller('MesOffresCtrl', function($scope, $ionicModal, $ionicPopup, $http) {
+.controller('MesOffresCtrl', function($scope, $ionicModal, $ionicPopup, $http, $window) {
 
     // Ajouter une offre
     if(getToken()){
@@ -148,16 +148,23 @@ angular.module('starter.controllers', ['ui.router'])
         $scope.addOffreModal = modal;
     });
 
-    $scope.addOffer = function() {
-        var nameOffer = this.addOffer.nameOffer;
-        var boutique = this.addOffer.boutique;
-        var reductionDuree = this.addOffer.reductionDuree;
-        var reductionMontant = this.addOffer.reductionMontant;
-        var description = this.addOffer.description;
-         // // // // // // // // // // // // // // // // // // //
-        // $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=false")
-        // .then(function(response) {
-        // });
+    $scope.addOffreData = function() {
+        var nameOffer = this.addOffreData.nameOffer;
+        var boutique = this.addOffreData.boutique;
+        var reductionDuree = this.addOffreData.reductionDuree;
+        var reductionMontant = this.addOffreData.reductionMontant;
+        var description = this.addOffreData.description;
+         // // // // // // // // // // // // // // // // // //
+         console.log("http://localhost:8080/api/vouchers?token=" + token() + "&title=" + nameOffer + "&shop=" + boutique + "&expiration=" + reductionDuree + "&value=" + reductionMontant + "&description=" + description);
+        $http.post("http://localhost:8080/api/vouchers?token=" + token() + "&title=" + nameOffer + "&shop=" + boutique + "&expiration=" + reductionDuree + "&value=" + reductionMontant + "&description=" + description)
+        .then(function(response) {
+          console.log(response);
+          console.log("voucher created");
+          $scope.addOffreModal.hide();
+          $window.location.reload(true);
+        });
+
+
     }    // // // // // // // // // // // // // // // // // // // // // //
 
     $http.get("http://localhost:8080/api/users/" + getToken().username + "/vouchers?token=" + token())
@@ -167,7 +174,7 @@ angular.module('starter.controllers', ['ui.router'])
     });
 
     //  popup de confirmations
-    $scope.showConfirm = function() {
+    $scope.showConfirm = function(id) {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Supprimer l\'offre',
             template: 'Etes-vous sûr de vouloir supprimer cette offre ?'
@@ -176,10 +183,13 @@ angular.module('starter.controllers', ['ui.router'])
         confirmPopup.then(function(res) {
             if(res) {
                 console.log('Vous êtes sûr');
-                 // // // // // // // // // // // // // // // // // // //
-                // $http.delete("http://localhost:8080/api/users/" + getToken().username + "/vouchers?token=" + token())
-                // .then(function(response) {
-                // }); // // // // // // // // // // // // // // // // //
+                console.log(id);
+                 // // // // // // // // // // // // // // // // // //
+                $http.delete("http://localhost:8080/api/vouchers/" + id + "?token=" + token())
+                .then(function(response) {
+                  console.log("Voucher deleted");
+                  $window.location.reload(true);
+                }); // // // // // // // // // // // // // // // // //
             } else {
                 console.log('Vous n\'êtes pas sûr');
             }
@@ -235,10 +245,19 @@ angular.module('starter.controllers', ['ui.router'])
                 if(res) {
                     // confirmation
                     console.log('Vous êtes sûr');
-                     // // // // // // // // // // // // // // // // // //
-                    // $http.put("http://localhost:8080/api/login?username=" + username + "&password=" + password)
-                    // .then(function(response) {
-                    // }); // // // // // // // // // // // // // // // //
+
+                    $http.post("http://localhost:8080/api/users/" + getToken().username + "/vouchers?id=" + $stateParams.offerId + "&token=" + token())
+                    .then(function(response) {
+                      console.log(response);
+                      if(response.data.success){
+                        alert("You now have this voucher!");
+                        $window.location.reload(true);
+                      }
+                      else{
+                        alert(response.data.message);
+                      }
+
+                    });
                 } else {
                     console.log('Vous n\'êtes pas sûr');
                 }

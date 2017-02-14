@@ -220,7 +220,7 @@ apiRoutes.post('/users/:username/vouchers', function(req, res) {
     var query = "INSERT INTO Associations (user, voucher) VALUES (?, ?)";
     db.run(query, queryParams, function(err, data){
         if(err){
-            res.json({ success: false, message: 'This user doesn\'t exist.' });
+            res.json({ success: false, message: 'You already have this voucher.', error: err });
         }
         else{
             res.json({ success: true, vouchers: data });
@@ -238,7 +238,7 @@ apiRoutes.get('/users/:username/vouchers', function(req, res) {
     }
     else{
         var queryParams = username;
-        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
+        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ? AND id IS NOT NULL";
     }
         db.all(query, queryParams, function(err, data){
         if(err){
@@ -296,6 +296,7 @@ apiRoutes.post('/vouchers', function(req, res){
         res.json({ success: false, message: 'You are not allowed to create a voucher.' });
     }
     else{
+
         var owner = req.decoded.username;
         var title = req.query.title;
         var shop = req.query.shop;
@@ -304,12 +305,13 @@ apiRoutes.post('/vouchers', function(req, res){
         var description = req.query.description;
 
         var queryParams = [owner, title, shop, expiration, value, description];
+        console.log(queryParams);
         var query = "INSERT INTO Vouchers (owner, title, shop, expiration, value, description) VALUES (?, ?, ?, ?, ?, ?)";
 
 
         db.run(query, queryParams, function(err){
             if(err){
-                 res.json({ success: false, message: 'Failed to create a new voucher.' });
+                 res.json({ success: false, message: 'Failed to create a new voucher.', error: err });
             }
             else{
                 res.json({
@@ -325,7 +327,7 @@ apiRoutes.post('/vouchers', function(req, res){
 apiRoutes.delete('/vouchers/:id', function(req, res){
     var id = req.params.id;
 
-    var queryParams = [id, req.decoded.email];
+    var queryParams = [id, req.decoded.username];
     var query = "DELETE FROM Vouchers WHERE id = ? AND owner = ?";
     db.run(query, queryParams, function(err){
         if(err){
