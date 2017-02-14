@@ -1,0 +1,23 @@
+<ion-modal-view>
+  <ion-content>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Nom d'utilisateur</span>
+        <input type="text" ng-model="signupData.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Mot de passe</span>
+        <input type="password" ng-model="signupData.password">
+      </label>
+      <label class="item">
+        <ion-checkbox ng-model="signupData.isGerant">Voulez-vous un compte gérant ?</ion-checkbox>
+      </label>
+      <label class="item" ng-show="error">
+        <span class="text">Le compte existe déjà !.</span>
+      </label>
+      <label class="item">
+        <button class="button button-block button-positive" ng-click="signUp()">Valider</button>
+      </label>
+    </div>
+  </ion-content>
+</ion-modal-view>

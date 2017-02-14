@@ -1,0 +1,19 @@
+<ion-view view-title="Echanger vos coupons !">
+  <ion-nav-buttons side="left">
+    <button menu-toggle = "left" class = "button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding">
+    <ion-list>
+      <!-- TODO -->
+      <ion-item ng-repeat="offerchercher in offerschercher" type="item-text-wrap">
+        {{offerchercher.title}}
+        <p>{{offerchercher.shop}}</p>
+        <p>{{offerchercher.expiration}}</p>
+        <p><b>-{{offerchercher.value}}%</b></p>
+        <p>{{offerchercher.description}}</p>
+        <p>Request sent by {{offerchercher.buyer}}</p>
+        <button class="button button-small button-positive" ng-show="{{offerchercher.buyer}} != null" ng-click="demander(offerchercher.id, offerchercher.user)">Envoyer une demande</button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

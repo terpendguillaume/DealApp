@@ -1,0 +1,16 @@
+<ion-modal-view>
+  <ion-content>
+      <div class="list">
+        <ion-list>
+          <!-- TODO -->
+          <ion-item ng-repeat="offertoposter in offerstoposter" type="item-text-wrap">
+            {{offertoposter.title}}
+            <p>{{offertoposter.shop}}</p>
+            <p>{{offertoposter.expiration}}</p>
+            <p><b>-{{offertoposter.value}}%</b></p>
+            <button class="button button-small button-positive" ng-show="true" ng-click="posterOffre({{offertoposter.id}})">Echanger ce coupon</button>
+          </ion-item>
+        </ion-list>
+      </div>
+  </ion-content>
+</ion-modal-view>

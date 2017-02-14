@@ -1,0 +1,18 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+  <!-- Populaires Tab -->
+  <ion-tab title="Cupons populaires" icon-off="ion-ios-star-outline" icon-on="ion-ios-star" href="#/tab/populaires">
+    <ion-nav-view name="tab-populaires"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Toutes les offres Tab -->
+  <ion-tab title="Toutes les coupons" icon-off="ion-ios-pricetag-outline" icon-on="ion-ios-pricetag" href="#/tab/offres">
+    <ion-nav-view name="tab-offres"></ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>

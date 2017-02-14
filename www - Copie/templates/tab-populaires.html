@@ -1,0 +1,15 @@
+<ion-view view-title="Coupons populaires">
+  <ion-nav-buttons side="left">
+    <button menu-toggle = "left" class = "button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item ng-repeat="offer in offersPop" type="item-text-wrap" href="#/tab/populaires/{{offer.id}}">
+        {{offer.title}}
+        <p>{{offer.shop}}</p>
+        <p><b>-{{offer.value}}%</b></p>
+        <p>Déjà {{offer.buyers}} personnes ont sélectionné ce coupon ! N'attendez plus !</p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
