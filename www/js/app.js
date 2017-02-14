@@ -97,7 +97,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     views: {
       'chercher': {
         templateUrl: 'templates/chercher.html',
-        // controller: 'ChercherCtrl'
+        controller: 'ChercherCtrl'
       }
     }
   })

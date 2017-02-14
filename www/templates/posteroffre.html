@@ -3,12 +3,12 @@
       <div class="list">
         <ion-list>
           <!-- TODO -->
-          <ion-item ng-repeat="offerposter in offersposter" type="item-text-wrap">
-            {{offerposter.title}}
-            <p>{{offerposter.shop}}</p>
-            <p>{{offerposter.expiration}}</p>
-            <p><b>-{{offerposter.value}}%</b></p>
-            <button class="button button-small button-positive" ng-show="true" ng-click="posterOffre()">Echanger ce coupon</button>
+          <ion-item ng-repeat="offertoposter in offerstoposter" type="item-text-wrap">
+            {{offertoposter.title}}
+            <p>{{offertoposter.shop}}</p>
+            <p>{{offertoposter.expiration}}</p>
+            <p><b>-{{offertoposter.value}}%</b></p>
+            <button class="button button-small button-positive" ng-show="true" ng-click="posterOffre({{offertoposter.id}})">Echanger ce coupon</button>
           </ion-item>
         </ion-list>
       </div>

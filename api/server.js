@@ -220,7 +220,7 @@ apiRoutes.post('/users/:username/vouchers', function(req, res) {
     var query = "INSERT INTO Associations (user, voucher) VALUES (?, ?)";
     db.run(query, queryParams, function(err, data){
         if(err){
-            res.json({ success: false, message: 'You already have this voucher.', error: err });
+            res.json({ success: false, message: 'Vous possédez déjà ce coupon de réduction.', error: err });
         }
         else{
             res.json({ success: true, vouchers: data });
@@ -231,14 +231,22 @@ apiRoutes.post('/users/:username/vouchers', function(req, res) {
 apiRoutes.get('/users/:username/vouchers', function(req, res) {
     var username = req.params.username;
     var seller = req.decoded.seller;
+    var blackmarket = req.query.blackmarket;
+
     if(seller == "true"){
         var queryParams = username;
         var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE owner = ?";
     }
     else{
+      if(blackmarket == "false"){
+        var queryParams = username;
+        var query = "SELECT id, owner, title, shop, expiration, value, description, user FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ? AND id IS NOT NULL AND blackmarket = \'false\'";
+      }
+      else{
         var queryParams = username;
         var query = "SELECT id, owner, title, shop, expiration, value, description, user FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ? AND id IS NOT NULL";
-    }
+      }
+            }
         db.all(query, queryParams, function(err, data){
         if(err){
             res.json({ success: false, message: 'This user doesn\'t exist.' });
@@ -374,6 +382,22 @@ apiRoutes.post('/blackmarket/', function(req, res) {
     })
 });
 
+apiRoutes.delete('/blackmarket/', function(req, res) {
+    var user = req.decoded.username;
+    var voucher = req.query.voucher;
+    var queryParams = [user, voucher];
+
+    var query = "UPDATE Associations SET blackmarket = 'false', buyer = null WHERE user = ? AND voucher = ?";
+    db.run(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
+        }
+        else{
+            res.json({ success: true, message: 'Your voucher is longer on the black market' });
+        }
+    })
+});
+
 apiRoutes.get('/blackmarket/', function(req, res) {
     var user = req.decoded.username;
     var queryParams = [user];
@@ -393,7 +417,7 @@ apiRoutes.get('/blackmarket/:user', function(req, res) {
     var user = req.params.user;
     var queryParams = [user];
 
-    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
+    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE blackmarket = \'true\' AND user = ?";
     db.all(query, queryParams, function(err, data){
         if(err){
              res.json({ success: false, message: 'The black market is unreachable.', error: err });
@@ -431,7 +455,7 @@ apiRoutes.put('/blackmarket/:user/:voucher/', function(req, res) {
     if(accept == "true"){
       var queryParams = [buyer, user, voucher];
 
-      var query = "UPDATE Associations SET user = ?, buyer = null WHERE user = ? AND voucher = ?";
+      var query = "UPDATE Associations SET user = ?, buyer = null, blackmarket = \'false\' WHERE user = ? AND voucher = ?";
       db.run(query, queryParams, function(err, data){
           if(err){
                res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
