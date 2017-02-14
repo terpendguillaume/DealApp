@@ -228,7 +228,6 @@ apiRoutes.post('/users/:username/vouchers', function(req, res) {
     })
 });
 
-
 apiRoutes.get('/users/:username/vouchers', function(req, res) {
     var username = req.params.username;
     var seller = req.decoded.seller;
@@ -238,7 +237,7 @@ apiRoutes.get('/users/:username/vouchers', function(req, res) {
     }
     else{
         var queryParams = username;
-        var query = "SELECT id, owner, title, shop, expiration, value, description FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ? AND id IS NOT NULL";
+        var query = "SELECT id, owner, title, shop, expiration, value, description, user FROM Associations LEFT JOIN Users ON username = user LEFT JOIN Vouchers ON voucher = id WHERE user = ? AND id IS NOT NULL";
     }
         db.all(query, queryParams, function(err, data){
         if(err){
@@ -343,6 +342,120 @@ apiRoutes.delete('/vouchers/:id', function(req, res){
         }
     })
 });
+
+apiRoutes.get('/vouchers/:id', function(req, res) {
+    var id = req.params.id;
+    var queryParams = [id];
+
+    var query = "SELECT id, owner, title, shop, expiration, value, description FROM Vouchers WHERE id = ?";
+    db.get(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'This voucher doesn\'t exist.' });
+        }
+        else{
+            res.json({ success: true, voucher: data });
+        }
+    })
+});
+
+apiRoutes.post('/blackmarket/', function(req, res) {
+    var user = req.decoded.username;
+    var voucher = req.query.voucher;
+    var queryParams = [user, voucher];
+
+    var query = "UPDATE Associations SET blackmarket = 'true' WHERE user = ? AND voucher = ?";
+    db.run(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
+        }
+        else{
+            res.json({ success: true, message: 'Your voucher is now on the black market' });
+        }
+    })
+});
+
+apiRoutes.get('/blackmarket/', function(req, res) {
+    var user = req.decoded.username;
+    var queryParams = [user];
+
+    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE user != ?";
+    db.all(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'The black market is unreachable.', error: err });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
+        }
+    })
+});
+
+apiRoutes.get('/blackmarket/:user', function(req, res) {
+    var user = req.params.user;
+    var queryParams = [user];
+
+    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE user = ?";
+    db.all(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'The black market is unreachable.', error: err });
+        }
+        else{
+            res.json({ success: true, vouchers: data });
+        }
+    })
+});
+
+apiRoutes.put('/blackmarket/:user/:voucher/ask', function(req, res) {
+    var buyer = req.decoded.username;
+    var user = req.params.user;
+    var voucher = req.params.voucher;
+    var queryParams = [buyer, user, voucher];
+
+    var query = "UPDATE Associations SET buyer = ? WHERE user = ? AND voucher = ?";
+    db.run(query, queryParams, function(err, data){
+        if(err){
+             res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
+        }
+        else{
+            res.json({ success: true, message: 'The owner of this voucher needs to accept or to reject you demand.' });
+        }
+    })
+});
+
+// ?accept = false/true &buyer = client2
+apiRoutes.put('/blackmarket/:user/:voucher/', function(req, res) {
+    var user = req.params.user;
+    var voucher = req.params.voucher;
+    var accept = req.query.accept;
+    var buyer = req.query.buyer;
+
+    if(accept == "true"){
+      var queryParams = [buyer, user, voucher];
+
+      var query = "UPDATE Associations SET user = ?, buyer = null WHERE user = ? AND voucher = ?";
+      db.run(query, queryParams, function(err, data){
+          if(err){
+               res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
+          }
+          else{
+              res.json({ success: true, message: 'Your voucher now belongs to ' + buyer });
+          }
+      })
+    }
+    else{
+      var queryParams = [user, voucher];
+
+      var query = "UPDATE Associations SET buyer = null WHERE user = ? AND voucher = ?";
+      db.run(query, queryParams, function(err, data){
+          if(err){
+               res.json({ success: false, message: 'This voucher doesn\'t exist.', error: err });
+          }
+          else{
+              res.json({ success: true, message: 'This offer has been rejected' });
+          }
+      })
+    }
+});
+
 
 app.use('/api', apiRoutes);
 
