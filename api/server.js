@@ -402,7 +402,7 @@ apiRoutes.get('/blackmarket/', function(req, res) {
     var user = req.decoded.username;
     var queryParams = [user];
 
-    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE user != ?";
+    var query = "SELECT * FROM Associations LEFT JOIN Vouchers ON voucher = id WHERE user != ? AND blackmarket = \'true\'";
     db.all(query, queryParams, function(err, data){
         if(err){
              res.json({ success: false, message: 'The black market is unreachable.', error: err });

@@ -12,10 +12,10 @@
         <p>{{offerposter.expiration}}</p>
         <p><b>-{{offerposter.value}}%</b></p>
         <p>{{offerposter.description}}</p>
-        <p>Request sent by {{offerposter.buyer}}</p>
+        <p>Demande envoyée par - {{offerposter.buyer}}</p>
         <button class="button button-small button-positive" ng-show="true" ng-click="retirer({{offerposter.id}})">Retirer le coupon</button>
-        <button class="button button-small button-positive" ng-show="true" ng-click="echanger(offerposter.id, offerposter.buyer)">Confirmer l'echange</button>
-        <button class="button button-small button-positive" ng-show="true" ng-click="refuser({{offerposter.id}})">Refuser l'echange</button>
+        <button class="button button-small button-positive" ng-show="offerposter.buyer != null" ng-click="echanger(offerposter.id, offerposter.buyer)">Confirmer l'echange</button>
+        <button class="button button-small button-positive" ng-show="offerposter.buyer != null" ng-click="refuser({{offerposter.id}})">Refuser l'echange</button>
       </ion-item>
     </ion-list>
   </ion-content>

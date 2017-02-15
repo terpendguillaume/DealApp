@@ -11,7 +11,7 @@
         <p>{{offerchercher.expiration}}</p>
         <p><b>-{{offerchercher.value}}%</b></p>
         <p>{{offerchercher.description}}</p>
-        <p>Request sent by {{offerchercher.buyer}}</p>
+        <p>Demande envoyée par - {{offerchercher.buyer}}</p>
         <button class="button button-small button-positive" ng-show="{{offerchercher.buyer}} != null" ng-click="demander(offerchercher.id, offerchercher.user)">Envoyer une demande</button>
       </ion-item>
     </ion-list>

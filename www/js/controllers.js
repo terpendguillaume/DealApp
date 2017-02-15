@@ -67,6 +67,9 @@ angular.module('starter.controllers', ['ui.router'])
     var password = this.signupData.password;
     var isGerant = this.signupData.isGerant;
 
+    if(!isGerant)
+        isGerant = false
+console.log(isGerant);
     $http.post("http://localhost:8080/api/signup?username=" + username + "&password=" + password + "&seller=" + isGerant)
     .then(function(response) {
       if(response.data.success == true){
@@ -217,7 +220,7 @@ angular.module('starter.controllers', ['ui.router'])
 })
 
 // Offres details
-.controller('OffreDetailCtrl', function($scope, $stateParams, $ionicPopup, $http) {
+.controller('OffreDetailCtrl', function($scope, $stateParams, $ionicPopup, $http, $window) {
   $http.get("http://localhost:8080/api/vouchers/" + $stateParams.offerId)
   .then(function(response) {
     $scope.offer = response.data.voucher;
@@ -252,10 +255,9 @@ angular.module('starter.controllers', ['ui.router'])
             console.log(response);
             if(response.data.success){
               alert("Ce coupon de réduction est maintenant à vous !");
-              $window.location.reload(true);
             }
             else{
-              alert(response.data.message);
+              alert("Vous possédez déjà ce coupon !");
             }
 
           });
@@ -286,7 +288,7 @@ angular.module('starter.controllers', ['ui.router'])
     .then(function(response) {
       console.log(response);
       if(response.data.success){
-        alert("Your demand has been sent");
+        alert("Votre demande a été envoyée !");
         $window.location.reload(true);
       }
       else{
@@ -333,7 +335,7 @@ angular.module('starter.controllers', ['ui.router'])
         $window.location.reload(true);
       }
       else{
-        alert(response.data.message);
+        alert("Cette offre a déjà été postée !");
       }
     });
   }
@@ -356,7 +358,7 @@ angular.module('starter.controllers', ['ui.router'])
             $window.location.reload(true);
           }
           else{
-            alert(response.data.message);
+            console.log(response.data.message);
           }
         });
       }
